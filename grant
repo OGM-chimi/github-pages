@@ -1,0 +1,174 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Quiz App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="quiz-container" id="quiz">
+    <h2 id="question">Question text</h2>
+    <ul>
+      <li><button class="answer-btn" data-answer="a">Answer A</button></li>
+      <li><button class="answer-btn" data-answer="b">Answer B</button></li>
+      <li><button class="answer-btn" data-answer="c">Answer C</button></li>
+      <li><button class="answer-btn" data-answer="d">Answer D</button></li>
+    </ul>
+    <button id="next-btn">Next</button>
+    <p id="score">Score: 0</p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+CSS files
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .quiz-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  h2 {
+    font-size: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .answer-btn {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+    padding: 10px;
+    border: none;
+    background-color: #eee;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .answer-btn:hover {
+    background-color: #ddd;
+  }
+  
+  #next-btn {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100%;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #score {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  java script fileconst questions = [
+    {
+      question: "What is the capital of France?",
+      answers: {
+        a: "Paris",
+        b: "Berlin",
+        c: "Madrid",
+        d: "Rome"
+      },
+      correct: "a"
+    },
+    {
+      question: "Which planet is known as the Red Planet?",
+      answers: {
+        a: "Earth",
+        b: "Mars",
+        c: "Jupiter",
+        d: "Venus"
+      },
+      correct: "b"
+    },
+    {
+      question: "What is 2 + 2?",
+      answers: {
+        a: "3",
+        b: "5",
+        c: "4",
+        d: "6"
+      },
+      correct: "c"
+    }
+  ];
+  
+  let currentQuestion = 0;
+  let score = 0;
+  
+  const questionEl = document.getElementById("question");
+  const answerButtons = document.querySelectorAll(".answer-btn");
+  const nextBtn = document.getElementById("next-btn");
+  const scoreEl = document.getElementById("score");
+  
+  function loadQuestion() {
+    const q = questions[currentQuestion];
+    questionEl.textContent = q.question;
+    answerButtons.forEach(btn => {
+      const key = btn.getAttribute("data-answer");
+      btn.textContent = q.answers[key];
+      btn.disabled = false;
+      btn.style.backgroundColor = "#eee";
+    });
+  }
+  
+  function handleAnswer(e) {
+    const selected = e.target.getAttribute("data-answer");
+    const correct = questions[currentQuestion].correct;
+  
+    answerButtons.forEach(btn => {
+      btn.disabled = true;
+      const key = btn.getAttribute("data-answer");
+      if (key === correct) {
+        btn.style.backgroundColor = "#8f8"; // green for correct
+      } else if (key === selected) {
+        btn.style.backgroundColor = "#f88"; // red for wrong
+      }
+    });
+  
+    if (selected === correct) {
+      score++;
+      scoreEl.textContent = `Score: ${score}`;
+    }
+  }
+  
+  function nextQuestion() {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      loadQuestion();
+    } else {
+      questionEl.textContent = "Quiz Finished!";
+      document.querySelector("ul").style.display = "none";
+      nextBtn.style.display = "none";
+    }
+  }
+  
+  answerButtons.forEach(btn => {
+    btn.addEventListener("click", handleAnswer);
+  });
+  
+  nextBtn.addEventListener("click", nextQuestion);
+  
+  // Load the first question
+  loadQuestion();
+  
+    
+
